@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.deptrai.osahanfood.dto.UserDTO;
@@ -18,6 +19,9 @@ public class LoginService implements LoginServiceImp {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	@Override
 	public List<UserDTO> getAllUsers(){
 		List<Users> listUser = userRepository.findAll();
@@ -35,9 +39,9 @@ public class LoginService implements LoginServiceImp {
 	}
 	@Override
 	public boolean checkLogin(String username, String password) {
-		List<Users> listUsers= userRepository.findByUserNameAndPassword(username, password);
+		Users users= userRepository.findByUserName(username);
 		
-		return listUsers.size()>0;
+		return encoder.matches(password, users.getPassword());
 	}
 	@Override
 	public boolean addUser(SignupRequest signupRequest) {

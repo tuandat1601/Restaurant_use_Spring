@@ -1,12 +1,22 @@
 package com.deptrai.osahanfood.payload;
 
 public class ResponseData {
-private int status;
+private int status=200;
+private boolean isSuccess;
 private String desc;
 private Object data;
 public int getStatus() {
 	return status;
 }
+
+public boolean isSuccess() {
+	return isSuccess;
+}
+
+public void setSuccess(boolean isSuccess) {
+	this.isSuccess = isSuccess;
+}
+
 public void setStatus(int status) {
 	this.status = status;
 }

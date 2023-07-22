@@ -1,9 +1,12 @@
 package com.deptrai.osahanfood.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +26,17 @@ import com.deptrai.osahanfood.payload.request.SignupRequest;
 import com.deptrai.osahanfood.repositories.UserRepository;
 import com.deptrai.osahanfood.service.LoginService;
 import com.deptrai.osahanfood.service.imp.LoginServiceImp;
+import com.deptrai.osahanfood.util.JwtUtilHelper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 
 @CrossOrigin("*")
 @RestController
@@ -40,20 +46,24 @@ public class LoginController {
 
 @Autowired
 LoginServiceImp loginServiceImp;
+
+@Autowired
+JwtUtilHelper jwtUtilHelper;
 @PostMapping("/signin")
 public ResponseEntity<?> signin(@RequestParam String username,@RequestParam String password){
 	ResponseData responseData = new ResponseData();
-	SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-	String secretString = Encoders.BASE64.encode(key.getEncoded());
 	
 
-	System.out.println(secretString);
+	
 
 	if(loginServiceImp.checkLogin(username, password)) {
-		responseData.setData(true);
+		String token = jwtUtilHelper.generateToken(username) ;
+		
+		responseData.setSuccess(true);
+		responseData.setData(token);
 	}
 	else {
-		responseData.setData(false);
+		responseData.setSuccess(false);
 	}
 	return new ResponseEntity<>(responseData,HttpStatus.OK);
 }

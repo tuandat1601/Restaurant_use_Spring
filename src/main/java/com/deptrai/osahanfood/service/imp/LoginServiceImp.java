@@ -9,4 +9,5 @@ public interface LoginServiceImp {
 List<UserDTO> getAllUsers();
 boolean checkLogin(String username, String password);
 boolean addUser(SignupRequest signupRequest);
+
 }
