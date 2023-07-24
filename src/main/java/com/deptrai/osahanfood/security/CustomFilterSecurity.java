@@ -55,7 +55,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		.csrf().disable().
 		sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeHttpRequests()
-		.requestMatchers("/login/**")
+		.requestMatchers("/login/**","/restaurant/files/**")
 		.permitAll()
 		.anyRequest()
 		.authenticated();
